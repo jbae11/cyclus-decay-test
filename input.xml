@@ -1,0 +1,210 @@
+<!--
+Decay test
+-->
+<simulation>
+    <control>
+        <!-- 2015 to 2115 -->
+        <duration>100</duration>
+        <startmonth>1</startmonth>
+        <startyear>2015</startyear>
+        <dt>31536000</dt>
+        <decay>lazy</decay>
+    </control>
+    <archetypes>
+        <spec>
+            <lib>cycamore</lib>
+            <name>Source</name>
+        </spec>
+        <spec>
+            <lib>cycamore</lib>
+            <name>Sink</name>
+        </spec>
+        <spec>
+            <lib>cycamore</lib>
+            <name>Reactor</name>
+        </spec>
+        <spec>
+            <lib>agents</lib>
+            <name>NullRegion</name>
+        </spec>
+        <spec>
+            <lib>agents</lib>
+            <name>NullInst</name>
+        </spec>
+        <spec>
+            <lib>cycamore</lib>
+            <name>DeployInst</name>
+        </spec>
+        <spec>
+            <lib>cycamore</lib>
+            <name>Separations</name>
+        </spec>
+        <spec>
+            <lib>cycamore</lib>
+            <name>Enrichment</name>
+        </spec>
+        <spec>
+            <lib>cycamore</lib>
+            <name>Mixer</name>
+        </spec>
+        <spec>
+            <lib>cycamore</lib>
+            <name>Storage</name>
+        </spec>
+    </archetypes>
+
+
+    <facility>
+        <name>cs_source</name>
+        <config>
+            <Source>
+                <outcommod>cs</outcommod>
+                <outrecipe>cs_recipe</outrecipe>
+                <throughput>1e100</throughput>
+            </Source>
+        </config>
+    </facility>
+
+
+    <facility>
+        <name>am_source</name>
+        <config>
+            <Source>
+                <outcommod>am</outcommod>
+                <outrecipe>am_recipe</outrecipe>
+                <throughput>1e100</throughput>
+            </Source>
+        </config>
+    </facility>
+
+    <facility>
+        <name>sink</name>
+        <config>
+            <Sink>
+                <in_commods>
+                    <val>cs_decayed</val>
+                    <val>am_decayed</val>
+                </in_commods>
+                <capacity>1e299</capacity>
+            </Sink>
+        </config>
+    </facility>
+
+
+    <facility>
+        <!-- Stores uox unf for 48 months (4years) -->
+        <name>cs_storage</name>
+        <config>
+            <Storage>
+                <in_commods>
+                    <val>cs</val>
+                </in_commods>
+                <residence_time>10</residence_time>
+                <out_commods>
+                    <val>cs_decayed</val>
+                </out_commods>
+            </Storage>
+        </config>
+    </facility>
+
+    <facility>
+        <!-- Stores uox unf for 48 months (4years) -->
+        <name>am_storage</name>
+        <config>
+            <Storage>
+                <in_commods>
+                    <val>am</val>
+                </in_commods>
+                <residence_time>10</residence_time>
+                <out_commods>
+                    <val>am_decayed</val>
+                </out_commods>
+            </Storage>
+        </config>
+    </facility>
+
+    <region>
+        <name>reg</name>
+        <config>
+            <NullRegion/>
+        </config>
+
+                <institution>
+            <name>fac</name>
+            <config>
+                <DeployInst>
+                    <prototypes>
+                        <val>cs_source</val>
+                        <val>cs_storage</val>
+
+                        <val>am_source</val>
+                        <val>am_storage</val>
+
+                        <val>sink</val>
+                    </prototypes>
+                    <build_times>
+                        <val>1</val>
+                        <val>1</val>
+
+                        <val>1</val>
+                        <val>1</val>
+
+                        <val>1</val>
+
+                    </build_times>
+                    <n_build>
+                        <val>1</val>
+                        <val>1</val>
+
+                        <val>1</val>
+                        <val>1</val>
+
+                        <val>1</val>
+
+                   </n_build>
+                    <lifetimes>
+                        <val>9999</val>
+                        <val>9999</val>
+
+                        <val>9999</val>
+                        <val>9999</val>
+
+                        <val>9999</val>
+                    </lifetimes>
+                </DeployInst>
+            </config>
+        </institution>
+    </region>
+
+
+    <!-- FUEL CYCLE FACILITIES -->
+
+
+    <recipe>
+        <name>cs_recipe</name>
+        <basis>mass</basis>
+        <nuclide>
+            <id>Cs137</id>
+            <comp>50</comp>
+        </nuclide>
+        <nuclide>
+            <id>Sr90</id>
+            <comp>50</comp>
+        </nuclide>
+    </recipe>
+
+
+    <recipe>
+        <name>am_recipe</name>
+        <basis>mass</basis>
+        <nuclide>
+            <id>Am241</id>
+            <comp>50</comp>
+        </nuclide>
+        <nuclide>
+            <id>Pu241</id>
+            <comp>50</comp>
+        </nuclide>
+    </recipe>
+
+</simulation>
